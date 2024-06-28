@@ -1,0 +1,30 @@
+.backgroundLogin {
+  background-image: url("./assets/Roatan.jpg"); /* Ajusta el path según corresponda */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.swal2-popup.swal2-modal {
+  border-radius: 30px;
+}
+
+.swal2-container {
+  z-index: 9999;
+}
+
+.MuiButtonBase-root.MuiChip-root {
+  color: white;
+  background-color: #4a9d9c;
+}
+
+/* .MuiChip-label.MuiChip-labelMedium {
+  font-size: medium;
+  font-weight: bold;
+} */
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiChip-deleteIcon {
+  color: white;
+}
