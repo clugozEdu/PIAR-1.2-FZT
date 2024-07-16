@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useTheme, useMediaQuery } from "@mui/material";
 import {
-  Grid,
   Drawer,
   AppBar,
   Toolbar,
   Typography,
   IconButton,
   CssBaseline,
+  Box,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -35,7 +35,7 @@ function AppBarSite({ advisor }) {
   } = advisor?.[0] || {};
 
   return (
-    <Grid container>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -84,12 +84,11 @@ function AppBarSite({ advisor }) {
           isAdmin={role === "admin"}
         />
       </Drawer>
-      <Grid item xs sx={{ p: 3 }}>
-        <Toolbar />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         <NavLinksBreadcrumbs />
         <Outlet />
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }
 

@@ -66,6 +66,7 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
   };
 
   const errorMessages = getErrorMessages(errors, touched);
+  console.log(errorMessages);
   const steps = ["Datos de la visita", "Objetivos o Própositos", "Docentes"];
 
   // reset steps

@@ -8,8 +8,9 @@ import formSubmitHandler from "../../utils/FormSubmitHandler";
 import FormikInitializer from "../../components/FormInitializer";
 import { initialValuesForm } from "../../utils/Variables";
 
-const getValidationSchemaVisit = (typeOfRegister) => {
-  return Yup.object({
+// Función para obtener el esquema de validación base
+const getBaseValidationSchema = () => {
+  return Yup.object().shape({
     idAdvisor: Yup.string().required("Requerido"),
     idArea: Yup.string().required("Requerido"),
     date: Yup.date()
@@ -40,32 +41,92 @@ const getValidationSchemaVisit = (typeOfRegister) => {
       ),
     idLocation: Yup.array()
       .min(1, "Debe agregar al menos una escuela")
-      .required("Required"),
+      .required("Requerido"),
     modality: Yup.string().required("Requerido"),
     register: Yup.string().required("Requerido"),
     typeOfRegister: Yup.string().required("Requerido"),
     programType: Yup.string().required("Requerido"),
-    tableDocents:
-      typeOfRegister === "Acompañamiento tecnológico"
-        ? Yup.array().notRequired()
-        : Yup.array()
-            .min(1, "Debe agregar al menos un docente")
-            .required("Debe agregar al menos un docente"),
-    objectives: Yup.array()
-      .of(
-        Yup.object().shape({
-          description: Yup.string().required(),
-          option: Yup.string().required(),
-        })
-      )
-      .test(
-        "is-empty",
-        "Debe agregar al menos un objetivo",
-        (value) => value && value.length > 0
-      ),
     evidencesVisit: Yup.array()
       .min(1, "Debe agregar al menos una evidencia")
-      .required("Required"),
+      .required("Requerido"),
+  });
+};
+
+// Función para obtener el esquema de validación para tableDocents
+const getTableDocentsValidationSchema = (typeOfRegister) => {
+  if (typeOfRegister === "Acompañamiento tecnológico") {
+    return Yup.array().notRequired();
+  } else {
+    return Yup.array()
+      .of(
+        Yup.object().shape({
+          id: Yup.number().required(),
+          Escuela: Yup.string().required(),
+          Nombre: Yup.string().required(),
+          Grado: Yup.string().required(),
+          Sección: Yup.string().required(),
+          results: Yup.array()
+            .of(
+              Yup.object().shape({
+                option: Yup.string().required(),
+                description: Yup.string().required(),
+              })
+            )
+            .length(4, "Debe tener exactamente 4 resultados")
+            .required(),
+          indicators: Yup.array()
+            .of(
+              Yup.object().shape({
+                id: Yup.number().required(),
+                indicator: Yup.string().required(),
+                description: Yup.string().required(),
+                status: Yup.string().required(),
+              })
+            )
+            .length(7, "Debe tener exactamente 7 indicadores")
+            .required(),
+          strategy: Yup.array()
+            .of(
+              Yup.object().shape({
+                strategy: Yup.string().required(),
+                category_sarm: Yup.string().required(),
+              })
+            )
+            .min(1, "Debe tener al menos una estrategia")
+            .required(),
+          evidences: Yup.array()
+            .of(
+              Yup.object().shape({
+                type: Yup.string().required(),
+                link: Yup.string().url().required(),
+              })
+            )
+            .min(3, "Debe tener al menos una evidencia")
+            .required(),
+        })
+      )
+      .min(1, "Debe agregar al menos un docente")
+      .required("Requerido");
+  }
+};
+
+// Función para obtener el esquema de validación para objectives
+const getObjectivesValidationSchema = () => {
+  return Yup.array()
+    .of(
+      Yup.object().shape({
+        description: Yup.string().required(),
+        option: Yup.string().required(),
+      })
+    )
+    .min(1, "Debe agregar al menos un objetivo");
+};
+
+const getValidationSchemaVisit = (typeOfRegister) => {
+  return Yup.object().shape({
+    ...getBaseValidationSchema().fields,
+    tableDocents: getTableDocentsValidationSchema(typeOfRegister),
+    objectives: getObjectivesValidationSchema(),
   });
 };
 
@@ -88,11 +149,12 @@ function AddVisits() {
       validationSchema={Yup.lazy((values) =>
         getValidationSchemaVisit(values.typeOfRegister)
       )}
-      onSubmit={(values, actions) =>
-        formSubmitHandler(values, actions, setSubmitStatus)
-      }
+      onSubmit={(values, actions) => {
+        setSubmitStatus("submitting");
+        formSubmitHandler(values, actions, setSubmitStatus);
+      }}
     >
-      {({ values, errors, isSubmitting }) => (
+      {({ values, isSubmitting }) => (
         <Form>
           <DynamicValidation />
           <FormikInitializer>
@@ -111,8 +173,7 @@ function AddVisits() {
               </Grid>
             </Grid>
           </FormikInitializer>
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-          <pre>{JSON.stringify(errors, null, 2)}</pre>
+          {console.log(values)}
         </Form>
       )}
     </Formik>

@@ -260,7 +260,7 @@ export const errorFields = [
   },
   {
     keys: ["tableDocents"],
-    message: "Faltan agregar al menos un Docente",
+    message: "Error en la sección de docentes",
   },
   {
     keys: ["entryTime"],

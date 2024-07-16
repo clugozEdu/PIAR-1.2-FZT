@@ -13,8 +13,6 @@ import {
 } from "@mui/material";
 import {
   PlanClases,
-  ChildMonitors,
-  DocentMonitors,
   ClassObservation,
   FormatPedagogyc,
 } from "../../../assets/icons/ListIcons";
@@ -43,18 +41,6 @@ const evidenceDocents = [
     typeEvidences: "Pedagogic",
     icon: <ClassObservation />,
   },
-  {
-    id: 4,
-    name: "Lista de niños monitores pedagógicos",
-    typeEvidences: "Pedagogic",
-    icon: <ChildMonitors />,
-  },
-  {
-    id: 5,
-    name: "Lista de docentes monitores pedagógicos",
-    typeEvidences: "Pedagogic",
-    icon: <DocentMonitors />,
-  },
 ];
 
 const propTypes = {
@@ -66,6 +52,8 @@ const propTypes = {
 const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
   const { values, setFieldValue } = useFormikContext();
   const [newEvidence, setNewEvidence] = useState({ type: "", link: "" });
+  const [evidenceExist, setEvidenceExist] = useState(false);
+  const [linkError, setLinkError] = useState(false);
 
   const getInitEvidences = (docent) => {
     const foundDocent = values.tableDocents.find((d) => d.id === docent.id);
@@ -81,10 +69,27 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewEvidence((prev) => ({ ...prev, [name]: value }));
+    if (name === "link" && value) {
+      setLinkError(false);
+    }
   };
 
   const handleAddEvidence = () => {
+    if (!newEvidence.link) {
+      setLinkError(true);
+      return;
+    }
+
     if (newEvidence.type && newEvidence.link) {
+      const evidenceExists = data.some(
+        (evidence) => evidence.type === newEvidence.type
+      );
+
+      if (evidenceExists) {
+        setEvidenceExist(true);
+        return;
+      }
+
       const updatedEvidences = [...data, newEvidence];
 
       const updatedDocents = values.tableDocents.map((docent) =>
@@ -96,6 +101,8 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
       setFieldValue("tableDocents", updatedDocents);
       setData(updatedEvidences);
       setNewEvidence({ type: "", link: "" });
+      setEvidenceExist(false);
+      setLinkError(false);
     }
   };
 
@@ -120,10 +127,9 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
   return (
     <Card
       sx={{
-        p: 2,
-        border: "2px solid #d3d3d3", // Borde más visible
-        borderRadius: "20px", // Borde redondeado
-        position: "relative", // Asegura que el botón de cierre se posicione correctamente
+        p: 1,
+        border: "2px solid #d3d3d3",
+        borderRadius: "20px",
       }}
     >
       <IconButton
@@ -138,7 +144,23 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
         <CloseIcon />
       </IconButton>
       <CardContent>
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2}>
+          <Grid
+            item
+            xs={12}
+            container
+            flexDirection={"column"}
+            alignContent={"center"}
+          >
+            {data.length === 3 && (
+              <Alert severity="success" sx={{ borderRadius: "20px" }}>
+                <Typography variant="body1" align="center">
+                  Las evidencias han sido completadas para el docente
+                </Typography>
+              </Alert>
+            )}
+          </Grid>
+
           <SelectFormField
             name="type"
             label="Tipo de evidencia"
@@ -153,6 +175,7 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
             sm={12}
             md={4}
             lg={4}
+            disabled={data.length === 3}
           />
 
           <TextFormField
@@ -164,6 +187,9 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
             sm={12}
             md={6}
             lg={6}
+            disabled={data.length === 3}
+            error={linkError}
+            helperText={linkError ? "El enlace no puede estar vacío" : ""}
           />
 
           <Grid item xs={12} sm={12} md={2} lg={2}>
@@ -183,6 +209,7 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
                   },
                 }}
                 onClick={handleAddEvidence}
+                disabled={data.length === 3}
               >
                 Añadir
               </Button>
@@ -238,7 +265,7 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
                   alignItems="center"
                   flexDirection={"column"}
                 >
-                  <Alert severity="info">
+                  <Alert severity="info" sx={{ borderRadius: "20px" }}>
                     <Typography variant="body1" align="center">
                       No hay evidencias disponibles.
                     </Typography>
@@ -248,6 +275,17 @@ const EvidencesDocents = ({ typeEvidences, currentDocent, onClose }) => {
             </Grid>
           )}
         </Grid>
+
+        {evidenceExist && (
+          <Alert
+            severity="error"
+            sx={{ borderRadius: "20px", marginTop: "20px" }}
+          >
+            <Typography variant="body1" align="center">
+              No se puede subir la misma evidencia, seleccione otra opción
+            </Typography>
+          </Alert>
+        )}
       </CardContent>
     </Card>
   );

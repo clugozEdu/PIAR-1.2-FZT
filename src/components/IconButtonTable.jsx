@@ -22,8 +22,8 @@ const IconButtonTable = ({
       {...props}
       size="small"
       sx={{
-        color: iconColor,
-        fill: iconColor,
+        color: disabled ? "#c0c0c0" : iconColor,
+        fill: disabled ? "#c0c0c0" : iconColor,
       }}
       onClick={() => onClick(row, context)}
       disabled={disabled}

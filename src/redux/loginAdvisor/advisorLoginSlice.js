@@ -57,6 +57,7 @@ const loadInitialState = () => {
         localStorage.removeItem("advisorToken");
       }
     } catch (error) {
+      console.log(error);
       return initialState;
     }
   }

@@ -14,20 +14,22 @@ import {
   Button,
   Stack,
   Alert,
-  AlertTitle,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const propTypes = {
   currentDocent: PropTypes.object.isRequired,
-  setOpen: PropTypes.func.isRequired,
 };
 
-const IndicatorsTable = ({ currentDocent, setOpen }) => {
+const IndicatorsTable = ({ currentDocent }) => {
   const [data, setData] = useState([]);
+  const [indicatorsExist, setIndicatorsExist] = useState(false);
+  ``;
   const [initialData, setInitialData] = useState([]);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertError, setshowAlertError] = useState(false);
+  const [showAlertSave, setshowAlertSave] = useState(false);
   const { values, setFieldValue } = useFormikContext();
 
   const getInitialIndicators = (docent) => {
@@ -35,15 +37,16 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
     return foundDocent ? foundDocent.indicators : [];
   };
 
-  // useEffect to initData
   useEffect(() => {
     setInitialData(getInitialIndicators(currentDocent));
   }, [currentDocent, values.tableDocents]);
 
-  // effect to get initData or not
   useEffect(() => {
+    setIndicatorsExist(!initialData?.length > 0);
+    setshowAlertSave(initialData?.length > 0);
+
     setData(
-      initialData.length > 0
+      initialData?.length > 0
         ? initialData
         : [
             {
@@ -99,7 +102,6 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
     );
   }, [initialData]);
 
-  // handle to change status to click
   const handleStatusClick = (id, color) => {
     const newData = data.map((row) =>
       row.id === id
@@ -109,26 +111,25 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
     setData(newData);
   };
 
-  // render to status cell
   const renderStatusCell = (id, currentStatus, color) => {
+    const colorMap = {
+      rojo: "#f44336",
+      amarillo: "#f2df37",
+      verde: "#4caf50",
+    };
+
     return (
       <TableCell
         align="center"
         onClick={() => handleStatusClick(id, color)}
         style={{
           cursor: "pointer",
-          width: "40px",
+          width: "80px",
           height: "40px",
-          backgroundColor:
-            currentStatus === color
-              ? color === "rojo"
-                ? "#f44336"
-                : color === "amarillo"
-                ? "#f2df37"
-                : "#4caf50"
-              : "",
+          backgroundColor: currentStatus === color ? colorMap[color] : "",
           border: "1px solid",
           borderColor: currentStatus === color ? "transparent" : "#ddd",
+          padding: 0,
         }}
       >
         {currentStatus === color && <CheckIcon style={{ color: "white" }} />}
@@ -136,7 +137,6 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
     );
   };
 
-  // handle save indicators for docent in formik values
   const handleSaveIndicators = () => {
     const allSelected = data.every((row) => row.status !== "");
 
@@ -159,37 +159,97 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
       }
 
       setFieldValue("tableDocents", updatedDocents);
-
-      setOpen(false);
+      setIndicatorsExist(false);
+      setshowAlertSave(true);
+      setshowAlertError(false);
     } else {
-      setShowAlert(true);
+      setshowAlertError(true);
     }
+  };
+
+  const handleRemoveIndicators = () => {
+    const updatedDocents = values.tableDocents.map((docent) => {
+      if (docent.id === currentDocent.id) {
+        /* eslint-disable-next-line no-unused-vars */
+        const { indicators, ...docentWithoutIndicators } = docent;
+        return docentWithoutIndicators;
+      }
+      return docent;
+    });
+
+    setFieldValue("tableDocents", updatedDocents);
+    setIndicatorsExist(true);
+    setshowAlertSave(false);
   };
 
   return (
     <Grid container spacing={2}>
-      {showAlert && (
-        <Grid item xs={12}>
+      {showAlertError && (
+        <Grid
+          item
+          xs={12}
+          container
+          flexDirection={"column"}
+          alignContent={"center"}
+        >
           <Alert
             severity="error"
-            onClose={() => setShowAlert(false)}
+            onClose={() => setshowAlertError(false)}
             sx={{
               borderRadius: 20,
-              mt: 1,
             }}
           >
-            <AlertTitle>Error</AlertTitle>
             Todos los indicadores deben tener un estado seleccionado.
           </Alert>
         </Grid>
       )}
-      <Grid item xs={12}>
-        <Typography variant="body1" align="center">
+
+      {showAlertSave && (
+        <Grid
+          item
+          xs={12}
+          container
+          flexDirection={"column"}
+          alignContent={"center"}
+        >
+          <Alert
+            severity="success"
+            onClose={() => setshowAlertSave(false)}
+            sx={{
+              borderRadius: 20,
+            }}
+          >
+            Indicadores guardado con éxito.
+          </Alert>
+        </Grid>
+      )}
+
+      <Grid
+        item
+        xs={12}
+        sx={{
+          paddingBottom: 0,
+        }}
+      >
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            paddingBottom: 0,
+          }}
+        >
           Haga clic en las celdas de la columna Verde, Amarillo o Rojo para
           establecer el estado.
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          paddingBottom: 0,
+          paddingTop: 0,
+        }}
+      >
         <TableContainer component={Paper}>
           <Table size="small" aria-label="a dense table">
             <TableHead
@@ -198,11 +258,6 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
               }}
             >
               <TableRow>
-                <TableCell>
-                  <Typography variant="subtitle1" color="white">
-                    N
-                  </Typography>
-                </TableCell>
                 <TableCell>
                   <Typography variant="subtitle1" color="white">
                     Indicador
@@ -228,11 +283,11 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
             <TableBody>
               {data.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>
-                    <Typography>{row.id}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    {row.indicator}: {row.description}
+                  <TableCell style={{ width: "50%" }}>
+                    <Typography variant="body2" gutterBottom>
+                      <strong>{row.indicator}: </strong>
+                      {row.description}
+                    </Typography>
                   </TableCell>
                   {renderStatusCell(row.id, row.status, "rojo")}
                   {renderStatusCell(row.id, row.status, "amarillo")}
@@ -243,7 +298,7 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
           </Table>
         </TableContainer>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={8}>
         <Typography color={"red"}>
           <strong>ROJO:</strong> Estos indicadores requieren una atención
           priorizada, por su bajo desempeño en el aula.
@@ -255,21 +310,40 @@ const IndicatorsTable = ({ currentDocent, setOpen }) => {
         <Typography color={"#4caf50"}>
           <strong>VERDE:</strong> El desempeño de los indicadores es óptimo.
         </Typography>
+      </Grid>
+      <Grid item xs={4}>
         <Stack direction="row" spacing={2} justifyContent="flex-end">
-          <Button
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={handleSaveIndicators}
-            sx={{
-              backgroundColor: "#2e8b57",
-              "&:hover": {
-                backgroundColor: "#143e27",
-              },
-              color: "white",
-            }}
-          >
-            Guardar
-          </Button>
+          {indicatorsExist ? (
+            <Button
+              variant="contained"
+              startIcon={<SaveIcon />}
+              onClick={handleSaveIndicators}
+              sx={{
+                backgroundColor: "#2e8b57",
+                "&:hover": {
+                  backgroundColor: "#143e27",
+                },
+                color: "white",
+              }}
+            >
+              Guardar
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              onClick={handleRemoveIndicators}
+              sx={{
+                backgroundColor: "#f44336",
+                "&:hover": {
+                  backgroundColor: "#ba000d",
+                },
+                color: "white",
+              }}
+            >
+              Eliminar
+            </Button>
+          )}
         </Stack>
       </Grid>
     </Grid>

@@ -209,7 +209,7 @@ function FormVisit({ isSubmitting, submitStatus }) {
                 },
               }}
             >
-              {isSubmitting ? "Guardando..." : "Guardar Planificación"}
+              {isSubmitting ? "Guardando..." : "Guardar Visita"}
             </Button>
           ) : (
             <Button
