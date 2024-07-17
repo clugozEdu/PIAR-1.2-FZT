@@ -2,8 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
+<<<<<<< HEAD
 import store from "../src/redux/store";
 import router from "../src/routes/Routes";
+=======
+import store from "./redux/store";
+import router from "./routes/Routes";
+>>>>>>> develop-clugo
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

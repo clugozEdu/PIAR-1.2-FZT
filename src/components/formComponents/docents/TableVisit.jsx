@@ -149,7 +149,7 @@ const DocentTableVisit = ({ data }) => {
   return (
     <>
       <Grid container marginBottom={2} justifyContent={"center"}>
-        {typeTaller.length == 0 && (
+        {typeTaller.length == 0 && typeVisit === "Taller de formación" && (
           <Alert severity="warning">
             Tiene que seleccionar un taller antes de agregar a los docentes.
           </Alert>
@@ -187,25 +187,25 @@ const DocentTableVisit = ({ data }) => {
 
                 <TableCell>
                   <Stack direction="row" spacing={2}>
-                    {isDocentAdded(row.id) ? (
+                    {typeVisit === "Taller de formación" &&
+                    typeTaller.length === 0 ? null : isDocentAdded(row.id) ? (
                       <Tooltip title={"Eliminar docente"}>
                         <IconButton
                           size="small"
                           sx={{
-                            fill: isDocentAdded(row.id) ? "#FF3D3D" : "#c0c0c0",
+                            fill: "#FF3D3D",
                           }}
                           onClick={() => handleDeleteDocent(row)}
-                          // disabled={!isDocentAdded(row.id)}
                         >
                           <UserMinus />
                         </IconButton>
                       </Tooltip>
-                    ) : typeTaller.length > 0 ? (
+                    ) : (
                       <Tooltip title={"Agregar docente"}>
                         <IconButton
                           size="small"
                           sx={{
-                            fill: isDocentAdded(row.id) ? "#c0c0c0" : "#4a9d9c",
+                            fill: "#4a9d9c",
                           }}
                           onClick={() => handleAddDocent(row)}
                           disabled={isDocentAdded(row.id)}
@@ -213,8 +213,6 @@ const DocentTableVisit = ({ data }) => {
                           <UserPlus />
                         </IconButton>
                       </Tooltip>
-                    ) : (
-                      ""
                     )}
 
                     {typeVisit === "Acompañamiento pedagógico" ? (

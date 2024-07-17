@@ -98,15 +98,14 @@ function ResultDocents({ currentDocent }) {
     description: "",
   });
   const [error, setError] = useState(false);
-  const [deletedButton, setDeletedButton] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
-  // found docent if exist load data and if not load state ""
   useEffect(() => {
     const foundDocent = values.tableDocents.find(
       (d) => d.id === currentDocent.id
     );
     if (foundDocent) {
-      setDeletedButton(true);
+      setIsSaved(foundDocent.results && foundDocent.results.length > 0);
       setData(foundDocent.results || []);
       setTimeDocent(
         foundDocent.results?.find(
@@ -130,7 +129,7 @@ function ResultDocents({ currentDocent }) {
       );
     } else {
       setData([]);
-      setDeletedButton(false);
+      setIsSaved(false);
       setTimeDocent({ option: "Tiempo con el docente", description: "" });
       setIntencityDocent({ option: "Intensidad de uso", description: "" });
       setFrecuencyDocent({ option: "Frecuencia de uso", description: "" });
@@ -141,7 +140,6 @@ function ResultDocents({ currentDocent }) {
     }
   }, [currentDocent, values.tableDocents]);
 
-  // handler to set values in states
   const handleInputChange = (e, callBackState) => {
     const { value } = e.target;
     callBackState((prevState) => ({
@@ -150,7 +148,6 @@ function ResultDocents({ currentDocent }) {
     }));
   };
 
-  // handler to add result and push tableDocents
   const handleAddResult = () => {
     if (
       !timeDocent.description ||
@@ -183,23 +180,29 @@ function ResultDocents({ currentDocent }) {
     setFieldValue("tableDocents", updatedDocents);
     setData(updateResults);
     setError(false);
+    setIsSaved(true);
   };
 
   const handleDeletedResult = () => {
     const updatedDocents = values.tableDocents.map((docent) => {
       if (docent.id === currentDocent.id) {
-        // eslint-disable-next-line no-unused-vars
+        /* eslint-disable-next-line no-unused-vars */
         const { results, ...docentWithoutResults } = docent;
         return docentWithoutResults;
       }
       return docent;
     });
 
+    // const updatedDocents = values.tableDocents.filter(
+    //   (docent) => docent.id !== currentDocent.id
+    // );
+
     setFieldValue("tableDocents", updatedDocents);
+    setIsSaved(false);
   };
 
   const getIconResult = (type) => {
-    const result = iconResult.find((r) => r.type == type);
+    const result = iconResult.find((r) => r.type === type);
     return result ? result.icon : null;
   };
 
@@ -330,23 +333,23 @@ function ResultDocents({ currentDocent }) {
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Stack direction="row" spacing={2} justifyContent="center">
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<SaveIcon />}
-                sx={{
-                  backgroundColor: "#2e8b57",
-                  "&:hover": {
-                    backgroundColor: "#1d5737",
-                  },
-                }}
-                onClick={handleAddResult}
-                disabled={data.length === 4}
-              >
-                Guardar
-              </Button>
-
-              {deletedButton && (
+              {!isSaved ? (
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<SaveIcon />}
+                  sx={{
+                    backgroundColor: "#2e8b57",
+                    "&:hover": {
+                      backgroundColor: "#1d5737",
+                    },
+                  }}
+                  onClick={handleAddResult}
+                  disabled={data.length === 4}
+                >
+                  Guardar
+                </Button>
+              ) : (
                 <Button
                   variant="contained"
                   startIcon={<DeleteIcon />}
