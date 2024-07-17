@@ -127,14 +127,14 @@ function FormVisit({ isSubmitting, submitStatus }) {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <SchoolSection titleCard={"Elige la Escuela Visitada"} />
+                  <GeneralsSection />
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <GeneralsSection />
+                  <SchoolSection titleCard={"Elige la Escuela Visitada"} />
                 </CardContent>
               </Card>
             </Grid>

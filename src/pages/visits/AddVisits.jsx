@@ -56,7 +56,7 @@ const getBaseValidationSchema = () => {
 const getTableDocentsValidationSchema = (typeOfRegister) => {
   if (typeOfRegister === "Acompañamiento tecnológico") {
     return Yup.array().notRequired();
-  } else {
+  } else if (typeOfRegister === "Acompañamiento pedagógico") {
     return Yup.array()
       .of(
         Yup.object().shape({
@@ -102,6 +102,37 @@ const getTableDocentsValidationSchema = (typeOfRegister) => {
               })
             )
             .min(3, "Debe tener al menos una evidencia")
+            .required(),
+        })
+      )
+      .min(1, "Debe agregar al menos un docente")
+      .required("Requerido");
+  } else if (typeOfRegister === "Taller de formación") {
+    return Yup.array()
+      .of(
+        Yup.object().shape({
+          id: Yup.number().required(),
+          Escuela: Yup.string().required(),
+          Nombre: Yup.string().required(),
+          Grado: Yup.string().required(),
+          Sección: Yup.string().required(),
+          saber: Yup.array()
+            .min(
+              1,
+              "Debe de completar los saberes con exactamente 4 indicadores"
+            )
+            .required(),
+          saberHacer: Yup.array()
+            .min(
+              1,
+              "Debe de completar los saberes hacer con exactamente 4 indicadores"
+            )
+            .required(),
+          saberSer: Yup.array()
+            .min(
+              1,
+              "Debe de completar los saberes ser con exactamente 1 indicador"
+            )
             .required(),
         })
       )

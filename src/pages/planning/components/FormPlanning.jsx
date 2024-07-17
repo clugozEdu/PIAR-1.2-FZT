@@ -126,14 +126,14 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <SchoolSection titleCard={"Escuela a planificar"} />
+                  <GeneralsSection />
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <GeneralsSection />
+                  <SchoolSection titleCard={"Escuela a planificar"} />
                 </CardContent>
               </Card>
             </Grid>

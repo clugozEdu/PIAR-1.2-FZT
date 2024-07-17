@@ -74,7 +74,9 @@ function ListSideBar({ listData, userArea, isAdmin }) {
             {listItem.icon && (
               <ListItemIcon
                 sx={{
-                  fill: isSelected(listItem.path) ? "white" : "inherit",
+                  "& svg": {
+                    fill: isSelected(listItem.path) ? "white" : "inherit",
+                  },
                 }}
               >
                 {listItem.icon}
