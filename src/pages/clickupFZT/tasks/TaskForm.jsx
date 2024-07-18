@@ -1,40 +1,45 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { TextField, Grid } from "@mui/material";
+import { TextField, Grid, Button } from "@mui/material";
 import FormikInitializer from "../../../components/FormInitializer";
+import PropTypes from "prop-types";
 
-const TaskForm = () => {
+const validationSchema = Yup.object({
+  title: Yup.string().trim().required("Titulo es requerido."),
+  description: Yup.string().trim().required("Descripción es requerido."),
+  startDate: Yup.date(),
+  endDate: Yup.date().min(
+    Yup.ref("startDate"),
+    "La fecha fin debe ser posterior a la fecha inicio."
+  ),
+  hours_dedicated: Yup.number().when("endDate", {
+    is: (endDate) => endDate,
+    then: Yup.number()
+      .required("Horas dedicadas es requerido.")
+      .positive("Debe ser un número positivo.")
+      .integer("Debe ser un número entero."),
+  }),
+});
+
+const TaskForm = ({ onSave }) => {
+  const today = new Date().toISOString().split("T")[0];
   const initialValues = {
     title: "",
     description: "",
-    startDate: "",
+    startDate: today,
     endDate: "",
-    hoursDedicated: "",
-  };
-
-  const validationSchema = Yup.object({
-    title: Yup.string().trim().required("Titulo es requerido."),
-    description: Yup.string().trim().required("Descripción es requerido."),
-    startDate: Yup.date(),
-    endDate: Yup.date().min(
-      Yup.ref("startDate"),
-      "La fecha fin debe ser posterior a la fecha inicio."
-    ),
-    hours_dedicated: Yup.number()
-      .positive("Debe ser un número positivo.")
-      .integer("Debe ser un número entero."),
-  });
-
-  const handleSubmit = (values, { resetForm }) => {
-    resetForm();
+    hours_dedicated: "",
+    status: "BACKLOG",
   };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={(values) => {
+        onSave(values);
+      }}
     >
       {({ errors, touched }) => (
         <Form>
@@ -102,6 +107,21 @@ const TaskForm = () => {
                   helperText={<ErrorMessage name="hours_dedicated" />}
                 />
               </Grid>
+              <Grid
+                container
+                justifyContent={{ xs: "center", lg: "end" }}
+                marginTop={1}
+              >
+                <Button
+                  startIcon={<i className="fa-solid fa-floppy-disk"></i>}
+                  size="small"
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                >
+                  Guardar
+                </Button>
+              </Grid>
             </Grid>
           </FormikInitializer>
         </Form>
@@ -109,4 +129,9 @@ const TaskForm = () => {
     </Formik>
   );
 };
+
+TaskForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+};
+
 export default TaskForm;

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 
-const DialogForm = ({ open, onClose, title, onSave, children }) => {
+const DialogForm = ({ open, onClose, title, children }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{title}</DialogTitle>
@@ -16,9 +16,6 @@ const DialogForm = ({ open, onClose, title, onSave, children }) => {
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancelar
-        </Button>
-        <Button onClick={onSave} color="primary">
-          Guardar
         </Button>
       </DialogActions>
     </Dialog>
@@ -29,7 +26,6 @@ DialogForm.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  onSave: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
 };
 

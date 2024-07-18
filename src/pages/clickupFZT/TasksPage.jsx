@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Grid } from "@mui/material";
 import TaskForm from "./tasks/TaskForm";
-import { getTasks } from "../../api/appScript";
+import { getTasks, postTasks } from "../../api/appScript";
 import DialogForm from "../../components/shares/DialogForm";
 import TaskList from "./tasks/TaskList";
 import { useSelector } from "react-redux";
@@ -18,10 +18,13 @@ const TasksPage = () => {
   useEffect(() => {
     const getTasksAdvisor = async () => {
       const response = await getTasks(advisor.id_advisor);
-      console.log(response);
-      setTasks(response);
-      setLoading(false);
+
+      if (response.success) {
+        setTasks(response.data);
+        setLoading(false);
+      }
     };
+
     getTasksAdvisor();
   }, []);
 
@@ -33,7 +36,9 @@ const TasksPage = () => {
     setOpen(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async (values) => {
+    console.log(values);
+    // const response = await postTasks("postCreateTask", data);
     setOpen(false);
   };
 
@@ -76,7 +81,7 @@ const TasksPage = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid container justifyContent={{ xs: "center", lg: "end" }}>
+      <Grid container justifyContent={"end"}>
         <Button
           startIcon={<i className="fas fa-plus"></i>}
           size="small"
@@ -89,7 +94,7 @@ const TasksPage = () => {
         </Button>
       </Grid>
       <Grid item xs={12} md={6} lg={4}>
-        <CardTasks title="Backlog">
+        <CardTasks title="Backlog" color={"#ff9800"}>
           {loading ? (
             skeletonCharge("Todo")
           ) : (
@@ -98,7 +103,7 @@ const TasksPage = () => {
         </CardTasks>
       </Grid>
       <Grid item xs={12} md={6} lg={4}>
-        <CardTasks title="Pendiente">
+        <CardTasks title="Pendiente" color={"#2196f3"}>
           {loading ? (
             skeletonCharge("Doing")
           ) : (
@@ -107,7 +112,7 @@ const TasksPage = () => {
         </CardTasks>
       </Grid>
       <Grid item xs={12} md={6} lg={4}>
-        <CardTasks title="Realizadas">
+        <CardTasks title="Realizadas" color={"#4caf50"}>
           {loading ? (
             skeletonCharge("Done")
           ) : (
@@ -115,13 +120,8 @@ const TasksPage = () => {
           )}
         </CardTasks>
       </Grid>
-      <DialogForm
-        open={open}
-        onClose={handleClose}
-        title="Nueva Tarea"
-        onSave={handleSave}
-      >
-        <TaskForm />
+      <DialogForm open={open} onClose={handleClose} title="Nueva Tarea">
+        <TaskForm onSave={handleSave} />
       </DialogForm>
     </Grid>
   );

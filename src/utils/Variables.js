@@ -234,6 +234,23 @@ export const pathTitles = {
   technology: "Tecnología",
   workshop: "Taller de Formación",
   home: "Inicio",
+  tasks: "Tareas",
+  clickup: "Clickup FZT",
+  calendar: "Calendario",
+};
+
+export const theme = {
+  palette: {
+    success: {
+      main: "#4caf50", // Verde
+    },
+    warning: {
+      main: "#ff9800", // Naranja
+    },
+    info: {
+      main: "#2196f3", // Azul
+    },
+  },
 };
 
 // errors fields

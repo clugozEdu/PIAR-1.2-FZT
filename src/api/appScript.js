@@ -39,9 +39,24 @@ export const getTasks = async (advisor_id) => {
 
   try {
     const response = await axios.get(urlTmp);
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;
+  }
+};
+
+export const postTasks = async (context, data) => {
+  const urlTmp = `${urlAPITask}context=${context}`;
+
+  try {
+    const response = await axios.post(urlTmp, data, {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error;
   }
 };

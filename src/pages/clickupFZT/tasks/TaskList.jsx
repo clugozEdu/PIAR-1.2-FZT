@@ -5,7 +5,6 @@ import Task from "./Task";
 
 const TaskList = ({ tasks, status }) => {
   const filteredTasks = tasks.filter((task) => task.status === status);
-  console.log(filteredTasks);
 
   return (
     <Grid container spacing={2}>
@@ -44,7 +43,7 @@ TaskList.propTypes = {
       status: PropTypes.oneOf(["TODO", "DOING", "DONE", "DELETED"]),
     }).isRequired
   ).isRequired,
-  status: PropTypes.oneOf(["TODO", "DOING", "DONE", "DELETED"]),
+  status: PropTypes.oneOf(["TODO", "DOING", "DONE", "DELETED"]).isRequired,
 };
 
 export default TaskList;

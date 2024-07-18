@@ -8,10 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 
-const CardTasks = ({ title, children }) => {
+const CardTasks = ({ title, children, color }) => {
   return (
     <Card elevation={2}>
       <CardHeader
+        sx={{ backgroundColor: { color } }}
         title={
           <Typography sx={{ fontWeight: "bold" }} variant="h5" component="div">
             {title}
@@ -27,6 +28,7 @@ const CardTasks = ({ title, children }) => {
 CardTasks.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired,
+  color: PropTypes.string,
 };
 
 export default CardTasks;
