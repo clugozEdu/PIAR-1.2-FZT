@@ -3,6 +3,9 @@ import axios from "axios";
 let baseUrl =
   "https://script.google.com/macros/s/AKfycby8v0VM6rmpzOzKp7VOel6C8ys_NK-4-YzE3rnItXHYuxgxET5K8WckCkIQQBC-Epx8/exec?";
 
+let urlAPITask =
+  "https://script.google.com/macros/s/AKfycbygoVG4SXUhlL5D-7GJASOa6uw-DZOnIKKezz2nLFckfaInosjiqk-OJMb4LwkyRgrDcQ/exec?";
+
 export async function getApiData(context) {
   const dataApi = `${baseUrl}context=${context}`;
 
@@ -30,3 +33,15 @@ export async function postApiData(data) {
     return error;
   }
 }
+
+export const getTasks = async (advisor_id) => {
+  const urlTmp = `${urlAPITask}context=getTask&advisor_id=${advisor_id}`;
+
+  try {
+    const response = await axios.get(urlTmp);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+};

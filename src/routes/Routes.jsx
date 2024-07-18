@@ -6,6 +6,8 @@ import AddPlanning from "../pages/planning/AddPlanning";
 import AddVisits from "../pages/visits/AddVisits";
 import Login from "../pages/auth/Login";
 import Home from "../pages/Home";
+import TasksPage from "../pages/clickupFZT/TasksPage";
+import CalendarPage from "../pages/clickupFZT/CalendarPage";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,8 @@ const router = createBrowserRouter([
           { path: "planning/technology", element: <AddPlanning /> },
           { path: "visit/pedagogic", element: <AddVisits /> },
           { path: "visit/workshop", element: <AddVisits /> },
+          { path: "clickup/tasks", element: <TasksPage /> },
+          { path: "clickup/calendar", element: <CalendarPage /> },
         ],
       },
     ],

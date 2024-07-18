@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   // SchoolSvg,
   CalendarSvg,
@@ -7,6 +8,8 @@ import {
   TecnologycSvg,
   LocationSvg,
   EducationIcon,
+  ClickupFZT,
+  TaskList,
 } from "../assets/icons/ListIcons";
 
 const navLinks = [
@@ -81,6 +84,25 @@ const navLinks = [
             pl: 6.2,
           },
         ],
+      },
+    ],
+  },
+  {
+    name: "Clickup FZT",
+    icon: <ClickupFZT sx={{ fill: "#0d1f2d" }} />,
+    pl: 3,
+    children: [
+      {
+        name: "Tareas",
+        icon: <TaskList sx={{ fill: "#0d1f2d" }} />,
+        path: "/clickup/tasks",
+        pl: 4.5,
+      },
+      {
+        name: "Calendario",
+        icon: <CalendarSvg sx={{ fill: "#0d1f2d" }} />,
+        path: "/clickup/calendar",
+        pl: 4.5,
       },
     ],
   },
