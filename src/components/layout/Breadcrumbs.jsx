@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
-import { pathTitles } from "../utils/Variables";
+import { pathTitles } from "../../utils/Variables";
 
 function NavLinksBreadcrumbs() {
   // hook to get location in navLinks

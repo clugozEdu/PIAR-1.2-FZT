@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useSelector } from "react-redux";
-import AppBarSite from "./components/SideBar";
+import AppBarSite from "./components/layout/SideBar";
 
 function MainLayout() {
   const [advisorLogin, setAdvisorLogin] = useState([]);

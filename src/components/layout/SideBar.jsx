@@ -13,9 +13,9 @@ import {
 import PropTypes from "prop-types";
 import MenuIcon from "@mui/icons-material/Menu";
 import NavLinksBreadcrumbs from "./Breadcrumbs";
-import navLinks from "../utils/navlinks";
+import navLinks from "../../utils/navlinks";
 import ListSideBar from "./ListSideBar";
-import AccountMenu from "../pages/auth/AccountMenu";
+import AccountMenu from "../../pages/auth/AccountMenu";
 
 function AppBarSite({ advisor }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -84,7 +84,7 @@ function AppBarSite({ advisor }) {
           isAdmin={role === "admin"}
         />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 4 }}>
         <NavLinksBreadcrumbs />
         <Outlet />
       </Box>

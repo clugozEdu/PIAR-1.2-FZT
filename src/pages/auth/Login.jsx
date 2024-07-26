@@ -223,7 +223,7 @@ export default function SignIn() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f0f0f0", // Color de fondo para la página
+        backgroundColor: "#f0f0f0",
         borderRadius: "20px",
       }}
     >
@@ -232,11 +232,11 @@ export default function SignIn() {
         component={Paper}
         elevation={6}
         sx={{
-          width: { xs: "80%", sm: "60%", md: "40%", lg: "30%" }, // Ajuste de ancho para hacerlo más pequeño
+          width: { xs: "80%", sm: "60%", md: "40%", lg: "30%" },
           padding: 4,
           borderRadius: 5,
           boxShadow: 3,
-          backgroundColor: "#fff", // Color de fondo para la tarjeta
+          backgroundColor: "#fff",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -307,14 +307,8 @@ export default function SignIn() {
             </Button>
           </Box>
         </Box>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          align="center"
-          sx={{ mt: 2 }}
-        >
-          <Copyright />
-        </Typography>
+
+        <Copyright marginTop={2} />
       </Grid>
     </Box>
   );

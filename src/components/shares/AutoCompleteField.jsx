@@ -1,6 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Grid, TextField, Autocomplete, CircularProgress } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Autocomplete,
+  CircularProgress,
+  Chip,
+} from "@mui/material";
 import { useField, useFormikContext } from "formik";
 
 const AutoCompleteFormField = ({
@@ -9,11 +15,14 @@ const AutoCompleteFormField = ({
   options,
   getOptionLabel,
   getOptionSelectedValue,
+  getOptionDisabled,
   xs = 12,
   sm = 12,
   md = 6,
   lg = 3,
-  limitTags = 3,
+  limitTags = 2,
+  maxSelections,
+  onDeleteTag, // Add onDeleteTag prop
   ...props
 }) => {
   const { setFieldValue } = useFormikContext();
@@ -21,10 +30,20 @@ const AutoCompleteFormField = ({
   const loading = options.length === 0;
 
   const handleChange = (event, newValue) => {
-    setFieldValue(
-      name,
-      newValue.map((option) => getOptionSelectedValue(option))
+    if (!maxSelections || newValue.length <= maxSelections) {
+      setFieldValue(
+        name,
+        newValue.map((option) => getOptionSelectedValue(option))
+      );
+    }
+  };
+
+  const handleDelete = (optionToDelete) => {
+    const newValue = field.value.filter(
+      (value) => value !== getOptionSelectedValue(optionToDelete)
     );
+    setFieldValue(name, newValue);
+    if (onDeleteTag) onDeleteTag(optionToDelete); // Call onDeleteTag prop
   };
 
   return (
@@ -35,11 +54,31 @@ const AutoCompleteFormField = ({
         {...props}
         options={options}
         getOptionLabel={getOptionLabel}
+        getOptionDisabled={getOptionDisabled}
         value={options.filter((option) =>
           (field.value || []).includes(getOptionSelectedValue(option))
         )}
         onChange={handleChange}
         disableCloseOnSelect
+        renderTags={(tagValue, getTagProps) =>
+          tagValue.map((option, index) => {
+            /* eslint-disable-next-line no-unused-vars */
+            const { key, onDelete, ...tagProps } = getTagProps({ index });
+            const isDisabled = getOptionDisabled
+              ? getOptionDisabled(option)
+              : false;
+
+            return (
+              <Chip
+                key={key} // Explicitly use key here
+                label={getOptionLabel(option)}
+                disabled={isDisabled}
+                onDelete={isDisabled ? undefined : () => handleDelete(option)}
+                {...tagProps} // Spread other props excluding key and onDelete
+              />
+            );
+          })
+        }
         renderInput={(params) => (
           <TextField
             {...params}
@@ -75,11 +114,14 @@ AutoCompleteFormField.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   getOptionLabel: PropTypes.func.isRequired,
   getOptionSelectedValue: PropTypes.func.isRequired,
+  getOptionDisabled: PropTypes.func,
   xs: PropTypes.number,
   sm: PropTypes.number,
   md: PropTypes.number,
   lg: PropTypes.number,
   limitTags: PropTypes.number,
+  maxSelections: PropTypes.number,
+  onDeleteTag: PropTypes.func, // Define onDeleteTag prop
 };
 
 export default AutoCompleteFormField;

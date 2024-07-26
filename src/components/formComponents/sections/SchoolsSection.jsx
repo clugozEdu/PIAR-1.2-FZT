@@ -18,10 +18,10 @@ const SchoolSection = ({ titleCard }) => {
   }, [dispatch, schools]);
 
   useEffect(() => {
-    if (values.idLocation.length > 0) {
+    if (values.idSchool.length > 0) {
       let departmentsId = [];
       let municipalitiesId = [];
-      values.idLocation.forEach((idSchool) => {
+      values.idSchool.forEach((idSchool) => {
         const school = schools.find((school) => school.id_school === idSchool);
 
         if (school) {
@@ -36,7 +36,7 @@ const SchoolSection = ({ titleCard }) => {
       setFieldValue("municipalities", []);
       setFieldValue("departments", []);
     }
-  }, [values.idLocation, schools, setFieldValue]);
+  }, [values.idSchool, schools, setFieldValue]);
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -56,7 +56,7 @@ const SchoolSection = ({ titleCard }) => {
       </Grid>
 
       <AutoCompleteFormField
-        name="idLocation"
+        name="idSchool"
         label="Escuela"
         options={schools}
         getOptionLabel={(option) => option.school_name}
@@ -65,6 +65,7 @@ const SchoolSection = ({ titleCard }) => {
         sm={12}
         md={12}
         lg={12}
+        maxSelections={5}
       />
     </Grid>
   );

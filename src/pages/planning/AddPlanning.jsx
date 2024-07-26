@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
-import CardsForms from "../../components/Cards";
+import CardsForms from "../../components/layout/Cards";
 import FormPlanning from "./components/FormPlanning";
 import formSubmitHandler from "../../utils/FormSubmitHandler";
-import FormikInitializer from "../../components/FormInitializer";
+import FormikInitializer from "../../components/formComponents/FormInitializer";
 import { initialValuesForm } from "../../utils/Variables";
 
 const getValidationSchema = (typeOfRegister) => {
@@ -38,7 +38,7 @@ const getValidationSchema = (typeOfRegister) => {
           return entryTime ? value > entryTime : true;
         }
       ),
-    idLocation: Yup.array()
+    idSchool: Yup.array()
       .min(1, "Debe agregar al menos una escuela")
       .required("Required"),
     modality: Yup.string().required("Requerido"),

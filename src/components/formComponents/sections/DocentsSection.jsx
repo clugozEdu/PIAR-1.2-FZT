@@ -3,8 +3,8 @@ import { Grid, Typography, Box, Alert, AlertTitle } from "@mui/material";
 import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import DocentsTablePlanning from "./TablePlanning";
-import DocentTableVisit from "./TableVisit";
+import DocentsTablePlanning from "../docents/TablePlanning";
+import DocentTableVisit from "../docents/TableVisit";
 import { typeIntervention } from "../../../utils/Variables";
 
 const SectionDocents = () => {
@@ -28,7 +28,7 @@ const SectionDocents = () => {
     if (schools.length > 0) {
       let docents = [];
 
-      values.idLocation.forEach((idSchool) => {
+      values.idSchool.forEach((idSchool) => {
         schools
           .filter((school) => school.id_school === idSchool)
           .forEach((school) => {
@@ -39,7 +39,7 @@ const SectionDocents = () => {
     } else {
       setRows([]);
     }
-  }, [values.idLocation, schools]);
+  }, [values.idSchool, schools]);
 
   if (error) return <div>Error: {error.message}</div>;
 

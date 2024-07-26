@@ -20,11 +20,29 @@
   background-color: #4a9d9c;
 }
 
-/* .MuiChip-label.MuiChip-labelMedium {
-  font-size: medium;
-  font-weight: bold;
-} */
-
 .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiChip-deleteIcon {
   color: white;
+}
+
+/* transitionStyles.css */
+.btn-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.btn-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms ease-in, transform 300ms ease-in;
+}
+
+.btn-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.btn-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms ease-in, transform 300ms ease-in;
 }

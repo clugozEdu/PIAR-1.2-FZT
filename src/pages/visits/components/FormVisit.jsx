@@ -18,11 +18,11 @@ import {
   Grid,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import SchoolSection from "../../../components/formComponents/schools/SchoolsSection";
-import SectionDocents from "../../../components/formComponents/docents/DocentsSection";
-import SectionObjectives from "../../../components/formComponents/generals/Objectives";
-import Evidencias from "../../../components/formComponents/evidences/Evidences";
-import GeneralsSection from "../../../components/formComponents/generals/GeneralsSection";
+import SchoolSection from "../../../components/formComponents/sections/SchoolsSection";
+import SectionDocents from "../../../components/formComponents/sections/DocentsSection";
+import SectionObjectives from "../../../components/formComponents/sections/Objectives";
+import Evidencias from "../../../components/formComponents/sections/Evidences";
+import GeneralsSection from "../../../components/formComponents/sections/GeneralsSection";
 import { typeIntervention } from "../../../utils/Variables";
 import { getErrorMessages } from "../../../utils/helpers";
 
@@ -35,7 +35,9 @@ const stepErrorFields = [
 
 function FormVisit({ isSubmitting, submitStatus }) {
   const [activeStep, setActiveStep] = useState(0);
-  const { errors, touched, handleSubmit, setFieldValue, resetForm } =
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [customValidationError, setCustomValidationError] = useState("");
+  const { errors, touched, handleSubmit, setFieldValue, resetForm, values } =
     useFormikContext();
   const { isLoading: isLoadingSchools } = useSelector(
     (state) => state.schoolData
@@ -47,7 +49,6 @@ function FormVisit({ isSubmitting, submitStatus }) {
     setActiveStep(0);
     resetForm();
 
-    // get typeRegister
     const dataIntervention = typeIntervention.filter(
       (type) => type.keyPath === location.pathname
     );
@@ -56,7 +57,7 @@ function FormVisit({ isSubmitting, submitStatus }) {
       setFieldValue("register", dataIntervention[0].typeRegister);
       setFieldValue("typeOfRegister", dataIntervention[0].name);
     }
-  }, [location, setFieldValue]);
+  }, [location, setFieldValue, resetForm]);
 
   const steps = ["Datos de la visita", "Objetivos", "Docentes", "Evidencias"];
 
@@ -68,11 +69,40 @@ function FormVisit({ isSubmitting, submitStatus }) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const errorMessages = getErrorMessages(errors, touched);
+  const validateAdvisors = () => {
+    if (values.sharedVisit) {
+      const advisorSet = new Set();
+      for (const docente of values.tableDocents) {
+        if (!docente.advisorAttend) {
+          setCustomValidationError(
+            "Cada docente debe tener un asesor asignado."
+          );
+          return false;
+        }
+        advisorSet.add(docente.advisorAttend);
+      }
+      if (advisorSet.size < 2) {
+        setCustomValidationError(
+          "Debe haber al menos dos asesores diferentes en los docentes."
+        );
+        return false;
+      }
+    }
+    setCustomValidationError("");
+    return true;
+  };
 
-  // reset steps
+  const handleFormSubmit = () => {
+    setFormSubmitted(true);
+    if (validateAdvisors()) {
+      handleSubmit();
+    }
+  };
+
+  const errorsFix = getErrorMessages(errors);
+
   useEffect(() => {
-    setActiveStep(0);
+    if (submitStatus === "success") setActiveStep(0);
   }, [submitStatus]);
 
   return (
@@ -167,7 +197,7 @@ function FormVisit({ isSubmitting, submitStatus }) {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Evidencias />
+                  <Evidencias type="visit" maxEvidences={3} />
                 </CardContent>
               </Card>
             </Grid>
@@ -196,9 +226,7 @@ function FormVisit({ isSubmitting, submitStatus }) {
               type="button"
               variant="contained"
               disabled={isSubmitting}
-              onClick={() => {
-                handleSubmit();
-              }}
+              onClick={handleFormSubmit}
               startIcon={
                 isSubmitting ? <CircularProgress size={24} /> : <SaveIcon />
               }
@@ -228,7 +256,23 @@ function FormVisit({ isSubmitting, submitStatus }) {
             </Button>
           )}
         </Box>
-        {Object.keys(errorMessages).length > 0 && (
+        {formSubmitted && Object.keys(errors).length > 0 && (
+          <Alert
+            sx={{
+              marginTop: 3,
+              borderRadius: 5,
+            }}
+            severity="warning"
+          >
+            <AlertTitle>Faltan campos por completar:</AlertTitle>
+            <ul>
+              {errorsFix.map((message, index) => (
+                <li key={index}>{message}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+        {customValidationError && (
           <Alert
             sx={{
               marginTop: 3,
@@ -236,12 +280,8 @@ function FormVisit({ isSubmitting, submitStatus }) {
             }}
             severity="error"
           >
-            <AlertTitle>Formulario contiene los siguientes errores:</AlertTitle>
-            <ul>
-              {Object.keys(errorMessages).map((message, index) => (
-                <li key={index}>{message}</li>
-              ))}
-            </ul>
+            <AlertTitle>Error de Validación:</AlertTitle>
+            <Typography>{customValidationError}</Typography>
           </Alert>
         )}
       </Box>

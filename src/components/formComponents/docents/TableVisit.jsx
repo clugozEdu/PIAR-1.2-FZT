@@ -21,12 +21,12 @@ import {
   Grid,
 } from "@mui/material";
 import { useFormikContext } from "formik";
-import IndicatorsTable from "./results/Indicators";
+import IndicatorsSection from "./results/Indicators";
 import ResultDocents from "./results/ResultVisit";
 import StrategyDocent from "./results/Strategy";
-import EvidencesDocents from "../evidences/EvidencesDocents";
 import RubricTable from "./rubrics/Rubrics";
 import { resultFormation } from "../../../utils/Variables";
+import { useSelector } from "react-redux";
 import {
   GoogleDrive,
   DocentAcompa,
@@ -37,8 +37,11 @@ import {
   BrainUser,
   ToolsUser,
   CardUser,
+  SharedIcon,
 } from "../../../assets/icons/ListIcons";
-import IconButtonTable from "../../IconButtonTable";
+import IconButtonTable from "../../formComponents/IconButtonTable";
+import IconButtonSelect from "../IconButtonSelect";
+import Evidences from "../sections/Evidences";
 
 const propTypes = {
   data: PropTypes.array.isRequired,
@@ -46,6 +49,7 @@ const propTypes = {
 
 const DocentTableVisit = ({ data }) => {
   const [typeVisit, setTypeVisit] = useState("");
+  const [shareVisit, setSharedVisit] = useState(false);
   const [typeTaller, setTypeTaller] = useState([]);
   const [saber, setSaber] = useState([]);
   const [saberHacer, setSaberHacer] = useState([]);
@@ -53,11 +57,20 @@ const DocentTableVisit = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [currentDocent, setCurrentDocent] = useState(null);
   const [modalContent, setModalContent] = useState(null);
+  const [filteredAdvisors, setFilteredAdvisors] = useState([]);
   const { values, setFieldValue } = useFormikContext();
+  const { advisors } = useSelector((state) => state.advisorsShared);
 
   useEffect(() => {
     setTypeVisit(values.typeOfRegister);
-  }, [values.typeOfRegister]);
+    setSharedVisit(values.sharedVisit);
+
+    setFilteredAdvisors(
+      advisors.filter((advisor) =>
+        values.idAdvisor.includes(advisor.id_advisor)
+      )
+    );
+  }, [values.typeOfRegister, values.sharedVisit, values.idAdvisor]);
 
   useEffect(() => {
     if (typeVisit === "Taller de formación") {
@@ -107,10 +120,15 @@ const DocentTableVisit = ({ data }) => {
   };
 
   const handleAddDocent = (row) => {
+    const newDocent = {
+      id: row.id,
+      Nombre: row.Nombre,
+    };
+
     const docent = values.tableDocents.find((d) => d.id === row.id);
 
     if (!docent) {
-      setFieldValue("tableDocents", [...values.tableDocents, row]);
+      setFieldValue("tableDocents", [...values.tableDocents, newDocent]);
     }
   };
 
@@ -137,6 +155,7 @@ const DocentTableVisit = ({ data }) => {
       saber: () => docent.saber && docent.saber.length > 0,
       saberHacer: () => docent.saberHacer && docent.saberHacer.length > 0,
       saberSer: () => docent.saberSer && docent.saberSer.length > 0,
+      advisorAttend: () => docent.advisorAttend && docent.advisorAttend != "",
     };
 
     return checks[type] ? checks[type]() : false;
@@ -271,6 +290,22 @@ const DocentTableVisit = ({ data }) => {
                           context="evidences"
                           iconOne={<GoogleDrive />}
                         />
+
+                        {shareVisit ? (
+                          <IconButtonSelect
+                            row={row}
+                            advisors={filteredAdvisors}
+                            handleCheck={() =>
+                              checkCompletion(row.id, "advisorAttend")
+                            }
+                            disabled={
+                              !checkCompletion(row.id, "evidences") ||
+                              !isDocentAdded(row.id)
+                            }
+                            titleTooltip={"Atendido por"}
+                            iconOne={<SharedIcon />}
+                          />
+                        ) : null}
                       </>
                     ) : (
                       <>
@@ -351,12 +386,16 @@ const DocentTableVisit = ({ data }) => {
               <ResultDocents currentDocent={currentDocent} />
             )}
             {currentDocent && modalContent === "indicators" && (
-              <IndicatorsTable currentDocent={currentDocent} />
+              <IndicatorsSection
+                context="indicators"
+                currentDocent={currentDocent}
+              />
             )}
             {currentDocent && modalContent === "evidences" && (
-              <EvidencesDocents
+              <Evidences
+                type={"docents"}
+                maxEvidences={3}
                 currentDocent={currentDocent}
-                typeEvidences="Pedagogic"
                 onClose={handleClose}
               />
             )}

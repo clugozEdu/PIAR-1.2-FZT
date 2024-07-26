@@ -18,10 +18,10 @@ import {
   Grid,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import SectionDocents from "../../../components/formComponents/docents/DocentsSection";
-import SectionObjectives from "../../../components/formComponents/generals/Objectives";
-import GeneralsSection from "../../../components/formComponents/generals/GeneralsSection";
-import SchoolSection from "../../../components/formComponents/schools/SchoolsSection";
+import SectionDocents from "../../../components/formComponents/sections/DocentsSection";
+import SectionObjectives from "../../../components/formComponents/sections/Objectives";
+import GeneralsSection from "../../../components/formComponents/sections/GeneralsSection";
+import SchoolSection from "../../../components/formComponents/sections/SchoolsSection";
 import { getErrorMessages } from "../../../utils/helpers";
 import { typeIntervention } from "../../../utils/Variables";
 

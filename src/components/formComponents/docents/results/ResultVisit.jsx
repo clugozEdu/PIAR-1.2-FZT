@@ -3,25 +3,23 @@ import PropTypes from "prop-types";
 import { useFormikContext } from "formik";
 import {
   Box,
-  Alert,
   Card,
   CardContent,
   Grid,
-  Button,
   Divider,
   TextField,
   MenuItem,
-  Typography,
   Stack,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SaveIcon from "@mui/icons-material/Save";
 import {
   ResultDocentTime,
   ResultDocentIntencity,
   ResultDocentFrecuency,
   ResultDocentMatery,
 } from "../../../../assets/icons/ListIcons";
+import AlertComponent from "../../layout/Alerts";
+import ResultCard from "../../layout/ResultsCard";
+import ButtonForm from "../../layout/Buttons";
 
 const propTypes = {
   currentDocent: PropTypes.object.isRequired,
@@ -193,10 +191,6 @@ function ResultDocents({ currentDocent }) {
       return docent;
     });
 
-    // const updatedDocents = values.tableDocents.filter(
-    //   (docent) => docent.id !== currentDocent.id
-    // );
-
     setFieldValue("tableDocents", updatedDocents);
     setIsSaved(false);
   };
@@ -227,11 +221,10 @@ function ResultDocents({ currentDocent }) {
             }}
           >
             {data.length === 4 && (
-              <Alert severity="success" sx={{ borderRadius: "20px" }}>
-                <Typography variant="body1" align="center">
-                  Resultados agregados correctamente
-                </Typography>
-              </Alert>
+              <AlertComponent
+                type={"success"}
+                message={"Resultados agregados correctamente"}
+              />
             )}
           </Grid>
           <Grid item xs={12} sm={12} md={2} lg={2}>
@@ -334,36 +327,13 @@ function ResultDocents({ currentDocent }) {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <Stack direction="row" spacing={2} justifyContent="center">
               {!isSaved ? (
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<SaveIcon />}
-                  sx={{
-                    backgroundColor: "#2e8b57",
-                    "&:hover": {
-                      backgroundColor: "#1d5737",
-                    },
-                  }}
-                  onClick={handleAddResult}
+                <ButtonForm
+                  context="saved"
+                  handler={handleAddResult}
                   disabled={data.length === 4}
-                >
-                  Guardar
-                </Button>
+                />
               ) : (
-                <Button
-                  variant="contained"
-                  startIcon={<DeleteIcon />}
-                  onClick={handleDeletedResult}
-                  sx={{
-                    backgroundColor: "#f44336",
-                    "&:hover": {
-                      backgroundColor: "#ba000d",
-                    },
-                    color: "white",
-                  }}
-                >
-                  Eliminar
-                </Button>
+                <ButtonForm context="deleted" handler={handleDeletedResult} />
               )}
             </Stack>
           </Grid>
@@ -375,25 +345,11 @@ function ResultDocents({ currentDocent }) {
           {data && data.length > 0 ? (
             data.map((results, index) => (
               <Grid item xs={12} sm={12} md={6} lg={6} key={index}>
-                <Card variant="outlined" sx={{ borderRadius: "20px" }}>
-                  <CardContent>
-                    <Box
-                      display={"flex"}
-                      flexDirection={"column"}
-                      justifyContent={"space-between"}
-                    >
-                      <Box display={"flex"} alignItems={"center"}>
-                        {getIconResult(results.option)}
-                        <Typography variant="h6" ml={1}>
-                          {results.option}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Typography variant="h6" color={"teal"}>
-                      {results.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <ResultCard
+                  option={results.option}
+                  description={results.description}
+                  icon={getIconResult(results.option)}
+                />
               </Grid>
             ))
           ) : (
@@ -404,11 +360,10 @@ function ResultDocents({ currentDocent }) {
                   alignItems="center"
                   flexDirection={"column"}
                 >
-                  <Alert severity="info" sx={{ borderRadius: "20px" }}>
-                    <Typography variant="body1" align="center">
-                      Agrega los resultados de la visita
-                    </Typography>
-                  </Alert>
+                  <AlertComponent
+                    type={"info"}
+                    message={"Resultados sin guardar"}
+                  />
                 </Box>
               </Grid>
             </Grid>

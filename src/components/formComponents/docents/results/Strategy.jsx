@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import {
-  Card,
-  Button,
-  Alert,
-  CardContent,
-  IconButton,
-  Divider,
-  Grid,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Divider, Grid, Box } from "@mui/material";
 import { useFormikContext } from "formik";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { DocentStrategy } from "../../../../assets/icons/ListIcons";
 import SelectFormField from "../../../shares/SelectFormField";
+import AlertComponent from "../../layout/Alerts";
+import ButtonForm from "../../layout/Buttons";
+import ResultCard from "../../layout/ResultsCard";
 
 const strategyArray = [
   {
@@ -117,7 +109,6 @@ function StrategyDocent({ currentDocent }) {
           : docent
       );
 
-      console.log(updateDocent);
       setFieldValue("tableDocents", updateDocent);
       setData(updateStrategy);
       setNewStrategy({
@@ -160,17 +151,16 @@ function StrategyDocent({ currentDocent }) {
             alignContent={"center"}
           >
             {strategyExist && (
-              <Alert severity="error" sx={{ borderRadius: "20px" }}>
-                <Typography variant="body1" align="center">
-                  No se puede subir la misma estrategia, seleccione otra opción.
-                </Typography>
-              </Alert>
+              <AlertComponent
+                type={"error"}
+                message={"Estrategia ya agregada, seleccioné otra opción"}
+              />
             )}
           </Grid>
 
           <SelectFormField
             name="strategy"
-            label="Tipo de evidencia"
+            label="Estrategias implementadas"
             catalog={strategyArray}
             menuItemValue="stratey"
             optionValue="stratey"
@@ -181,7 +171,9 @@ function StrategyDocent({ currentDocent }) {
             md={10}
             lg={10}
             error={errorStrategy}
-            helperText={errorStrategy ? "Tiene que seleccionar" : ""}
+            helperText={
+              errorStrategy ? "Tiene que seleccionar una estrategia" : ""
+            }
           />
 
           <Grid item xs={12} sm={12} md={2} lg={2}>
@@ -191,19 +183,7 @@ function StrategyDocent({ currentDocent }) {
               alignItems={"center"}
               my={1}
             >
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: "#2e8b57",
-                  "&:hover": {
-                    backgroundColor: "#1d5737",
-                  },
-                }}
-                onClick={handleAddStrategy}
-              >
-                Añadir
-              </Button>
+              <ButtonForm context="saved" handler={handleAddStrategy} />
             </Box>
           </Grid>
 
@@ -214,33 +194,13 @@ function StrategyDocent({ currentDocent }) {
           {data && data.length > 0 ? (
             data.map((strategy, index) => (
               <Grid item xs={12} sm={12} md={6} lg={6} key={index}>
-                <Card variant="outlined" sx={{ borderRadius: "20px" }}>
-                  <CardContent>
-                    <Box
-                      display={"flex"}
-                      flexDirection={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <Box display={"flex"} alignItems={"center"}>
-                        <DocentStrategy />
-                        <Typography variant="h6" ml={1}>
-                          Estrategia {index + 1}
-                        </Typography>
-                      </Box>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleDeleteStrategy(index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                    <Typography>{strategy.strategy}</Typography>
-                    <Typography color="textSecondary">
-                      Categoria : {strategy.category_sarm}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <ResultCard
+                  option={`Estrategia ${index + 1}`}
+                  description={strategy.strategy}
+                  description2={`Categoria : ${strategy.category_sarm}`}
+                  icon={<DocentStrategy />}
+                  onDelete={() => handleDeleteStrategy(index)}
+                />
               </Grid>
             ))
           ) : (
@@ -251,11 +211,12 @@ function StrategyDocent({ currentDocent }) {
                   alignItems="center"
                   flexDirection={"column"}
                 >
-                  <Alert severity="info" sx={{ borderRadius: "20px" }}>
-                    <Typography variant="body1" align="center">
-                      Agrega las estrategias implementadas por el docente.
-                    </Typography>
-                  </Alert>
+                  <AlertComponent
+                    type={"info"}
+                    message={
+                      "Agrega las estrategias implementadas por el docente"
+                    }
+                  />
                 </Box>
               </Grid>
             </Grid>

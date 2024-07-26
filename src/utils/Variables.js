@@ -236,51 +236,8 @@ export const pathTitles = {
   home: "Inicio",
 };
 
-// errors fields
-export const errorFields = [
-  {
-    keys: ["date"],
-    message: "La fecha de la visita no puede ser mayor a la fecha de hoy",
-  },
-  {
-    keys: ["idLocation"],
-    message: "Escuela sin seleccionar",
-  },
-  {
-    keys: ["modality"],
-    message: "Modalidad de la visita sin seleccionar",
-  },
-  {
-    keys: ["visitType"],
-    message: "Tipo de visita sin seleccionar",
-  },
-  {
-    keys: ["objectives"],
-    message: "Falta seleccionar al menos un propósito",
-  },
-  {
-    keys: ["tableDocents"],
-    message: "Error en la sección de docentes",
-  },
-  {
-    keys: ["entryTime"],
-    message: "La hora de entrada debe ser menor que la hora de salida",
-  },
-  {
-    keys: ["departureTime"],
-    message: "La hora de salida no puede ser menor a la hora de entrada",
-  },
-  {
-    keys: ["evidencesVisit"],
-    message: "Tiene que seleccionar una evidencia",
-  },
-  {
-    keys: ["register"],
-    message: "Verifica el registro que estas haciendo",
-  },
-];
-
 export const initialValuesForm = {
+  sharedVisit: false,
   advisorLogin: {},
   idAdvisor: "",
   idArea: "",
@@ -298,7 +255,7 @@ export const initialValuesForm = {
   // schoolType: "",
   // schoolDependenci: "",
   country: "",
-  idLocation: [],
+  idSchool: [],
   departments: [],
   municipalities: [],
 };
