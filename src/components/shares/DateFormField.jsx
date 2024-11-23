@@ -33,7 +33,7 @@ function DateFormField({ xs = 12, sm = 12, md = 6, lg = 3, ...props }) {
           error={!!(meta.touched && meta.error)}
           helperText={meta.touched && meta.error}
           KeyboardButtonProps={{
-            "aria-label": "change date",
+            "aria-label": "cambiar fecha",
           }}
           {...props}
           sx={{

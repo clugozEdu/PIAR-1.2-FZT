@@ -7,9 +7,17 @@ import {
   TecnologycSvg,
   LocationSvg,
   EducationIcon,
+  DashboardIcon,
+  ToolBox,
 } from "../assets/icons/ListIcons";
 
 const navLinks = [
+  {
+    name: "Dashboard",
+    icon: <DashboardIcon sx={{ fill: "#0d1f2d" }} />,
+    pl: 3,
+    path: "/Home",
+  },
   {
     name: "Área Educativa",
     icon: <EducationIcon sx={{ fill: "#0d1f2d" }} />,
@@ -78,6 +86,21 @@ const navLinks = [
             name: "Acompañamiento Tecnologíco",
             path: "/planning/technology",
             icon: <PedagogicSvg sx={{ fill: "#0d1f2d" }} />,
+            pl: 6.2,
+          },
+        ],
+      },
+      {
+        name: "Visitas",
+        icon: <LocationSvg sx={{ fill: "#0d1f2d" }} />,
+        // path: "/planning/visits",
+        pl: 4.5,
+        area: "Área de Tecnología",
+        children: [
+          {
+            name: "Acompañamiento Tecnológico",
+            path: "/visit/pedagogic",
+            icon: <ToolBox sx={{ fill: "#0d1f2d" }} />,
             pl: 6.2,
           },
         ],

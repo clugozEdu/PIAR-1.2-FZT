@@ -233,7 +233,7 @@ export const pathTitles = {
   pedagogic: "Acompañamiento Pedagógico",
   technology: "Tecnología",
   workshop: "Taller de Formación",
-  home: "Inicio",
+  home: "Dashboard",
 };
 
 export const initialValuesForm = {

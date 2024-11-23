@@ -2,7 +2,8 @@ import React from "react";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Grid, TextField } from "@mui/material";
+import { esES } from "@mui/x-date-pickers/locales";
+import { Grid } from "@mui/material";
 import { useField } from "formik";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
@@ -27,7 +28,12 @@ function TimeFormField({ xs = 12, sm = 12, md = 6, lg = 3, ...props }) {
 
   return (
     <Grid item xs={xs} sm={sm} md={md} lg={lg}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        localeText={
+          esES.components.MuiLocalizationProvider.defaultProps.localeText
+        }
+      >
         <MobileTimePicker
           slotProps={{ textField: { fullWidth: true } }}
           onChange={handleChange}

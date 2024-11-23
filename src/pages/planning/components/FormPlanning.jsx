@@ -34,6 +34,7 @@ const stepErrorFields = [
 
 const FormPlanning = ({ isSubmitting, submitStatus }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const { errors, touched, handleSubmit, setFieldValue, resetForm } =
     useFormikContext();
   const { isLoading: isLoadingSchools } = useSelector(
@@ -65,14 +66,24 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const errorMessages = getErrorMessages(errors, touched);
-  console.log(errorMessages);
   const steps = ["Datos de la visita", "Objetivos o Própositos", "Docentes"];
+
+  const handleForSubmit = () => {
+    if (errors.length > 0) {
+      handleSubmit();
+    } else {
+      setFormSubmitted(true);
+    }
+  };
 
   // reset steps
   useEffect(() => {
-    setActiveStep(0);
+    if (submitStatus === "success") {
+      setActiveStep(0);
+    }
   }, [submitStatus]);
+
+  const errorsFix = getErrorMessages(errors);
 
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
@@ -185,7 +196,7 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
               variant="contained"
               disabled={isSubmitting}
               onClick={() => {
-                handleSubmit();
+                handleForSubmit();
               }}
               startIcon={
                 isSubmitting ? <CircularProgress size={24} /> : <SaveIcon />
@@ -216,7 +227,7 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
             </Button>
           )}
         </Box>
-        {Object.keys(errorMessages).length > 0 && (
+        {formSubmitted && Object.keys(errors).length > 0 && (
           <Alert
             sx={{
               marginTop: 3,
@@ -224,9 +235,9 @@ const FormPlanning = ({ isSubmitting, submitStatus }) => {
             }}
             severity="error"
           >
-            <AlertTitle>Formulario contiene los siguientes errores:</AlertTitle>
+            <AlertTitle>Faltan campos por completar:</AlertTitle>
             <ul>
-              {Object.keys(errorMessages).map((message, index) => (
+              {errorsFix.map((message, index) => (
                 <li key={index}>{message}</li>
               ))}
             </ul>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getApiData } from "../../api/appScript.js";
+import { baseUrl } from "../../api/urls.js";
 
 // Acción async para obtener los datos de los asesores
 export const fetchAdvisors = createAsyncThunk(
@@ -7,7 +8,8 @@ export const fetchAdvisors = createAsyncThunk(
   async (email_user, { rejectWithValue }) => {
     try {
       const response = await getApiData(
-        `getAccess&email_user=${email_user}&view_id=1`
+        `getAccess&email_user=${email_user}&view_id=1`,
+        baseUrl
       );
 
       // Guardar token en localStorage solo si la respuesta es exitosa

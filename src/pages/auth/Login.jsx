@@ -171,6 +171,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdvisors } from "../../redux/loginAdvisor/advisorLoginSlice";
+import { fetchVisit } from "../../redux/visits/visitPiarSlice";
 import { useNavigate } from "react-router-dom";
 import "../../App.css";
 
@@ -206,6 +207,7 @@ export default function SignIn() {
     event.preventDefault();
     setShowAlert(false);
     dispatch(fetchAdvisors(email));
+    dispatch(fetchVisit());
   };
 
   useEffect(() => {

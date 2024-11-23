@@ -10,7 +10,9 @@ import { initialValuesForm } from "../../utils/Variables";
 
 const getValidationSchema = (typeOfRegister) => {
   return Yup.object({
-    idAdvisor: Yup.string().required("Requerido"),
+    idAdvisor: Yup.string().required(
+      "Es necesario seleccionar los asesores para compartir la visita."
+    ),
     idArea: Yup.string().required("Requerido"),
     date: Yup.date()
       .max(

@@ -290,22 +290,6 @@ const DocentTableVisit = ({ data }) => {
                           context="evidences"
                           iconOne={<GoogleDrive />}
                         />
-
-                        {shareVisit ? (
-                          <IconButtonSelect
-                            row={row}
-                            advisors={filteredAdvisors}
-                            handleCheck={() =>
-                              checkCompletion(row.id, "advisorAttend")
-                            }
-                            disabled={
-                              !checkCompletion(row.id, "evidences") ||
-                              !isDocentAdded(row.id)
-                            }
-                            titleTooltip={"Atendido por"}
-                            iconOne={<SharedIcon />}
-                          />
-                        ) : null}
                       </>
                     ) : (
                       <>
@@ -347,6 +331,25 @@ const DocentTableVisit = ({ data }) => {
                           iconOne={<CardUser />}
                         />
                       </>
+                    )}
+
+                    {shareVisit && (
+                      <IconButtonSelect
+                        row={row}
+                        advisors={filteredAdvisors}
+                        handleCheck={() =>
+                          checkCompletion(row.id, "advisorAttend")
+                        }
+                        disabled={
+                          !isDocentAdded(row.id) ||
+                          !(
+                            checkCompletion(row.id, "evidences") ||
+                            checkCompletion(row.id, "saberSer")
+                          )
+                        }
+                        titleTooltip={"Atendido por"}
+                        iconOne={<SharedIcon />}
+                      />
                     )}
                   </Stack>
                 </TableCell>

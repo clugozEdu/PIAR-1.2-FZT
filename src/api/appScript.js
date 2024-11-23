@@ -1,10 +1,7 @@
 import axios from "axios";
 
-let baseUrl =
-  "https://script.google.com/macros/s/AKfycby8v0VM6rmpzOzKp7VOel6C8ys_NK-4-YzE3rnItXHYuxgxET5K8WckCkIQQBC-Epx8/exec?";
-
-export async function getApiData(context) {
-  const dataApi = `${baseUrl}context=${context}`;
+export async function getApiData(context, url) {
+  const dataApi = `${url}context=${context}`;
 
   try {
     const response = await axios.get(dataApi);

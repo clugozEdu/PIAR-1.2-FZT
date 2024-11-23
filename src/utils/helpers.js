@@ -1,3 +1,4 @@
+// function get errors form form
 export const getErrorMessages = (errores) => {
   if (!errores || typeof errores !== "object") return []; // Verificar si errores es null, undefined o no es un objeto
 
@@ -47,6 +48,7 @@ const stringToColor = (string) => {
   return color;
 };
 
+// function to callback stringColor for return avatar user and color
 export const stringAvatar = (name) => {
   return {
     sx: {
@@ -54,4 +56,40 @@ export const stringAvatar = (name) => {
     },
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
+};
+
+export const getSeriesData = (data, keyUnique, keyReturnTypeChart) => {
+  const dataSeries = {};
+
+  data.forEach((visit) => {
+    const dataUnique = visit[keyUnique];
+
+    if (!dataSeries[dataUnique]) {
+      dataSeries[dataUnique] = 0;
+    }
+
+    dataSeries[dataUnique]++;
+  });
+
+  return Object.entries(dataSeries).map(([label, value], id) => ({
+    id: id,
+    [keyReturnTypeChart]: value,
+    label: label,
+  }));
+};
+
+export const getTotalUsers = (data) => {
+  const users = {};
+
+  data.forEach((visit) => {
+    visit.users.forEach((user) => {
+      const userUnique = user.user_id;
+
+      if (!users[userUnique]) {
+        users[userUnique] = user.user_name; // Agrega el usuario al objeto users
+      }
+    });
+  });
+
+  return Object.entries(users);
 };

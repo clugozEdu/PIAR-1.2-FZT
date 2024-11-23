@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getApiData } from "../../api/appScript.js";
+import { baseUrl } from "../../api/urls.js";
 
 // Action async to fetch schools
 export const fetchSchools = createAsyncThunk(
   "schoolData/fetchSchools",
   async () => {
-    const response = await getApiData("getUSAssociation");
+    const response = await getApiData("getUSAssociation", baseUrl);
     return response;
   }
 );

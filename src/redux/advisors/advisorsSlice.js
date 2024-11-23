@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getApiData } from "../../api/appScript";
+import { baseUrl } from "../../api/urls";
 
 // action async to get data for advisors
 export const fecthAdvisorsShared = createAsyncThunk(
   "advisorsShared/fecthAdvisorsShared",
   async () => {
-    const response = await getApiData("getAdvisors");
+    const response = await getApiData("getAdvisors", baseUrl);
     return response;
   }
 );

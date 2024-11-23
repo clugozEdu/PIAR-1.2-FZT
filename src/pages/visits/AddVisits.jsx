@@ -163,11 +163,11 @@ const getTableDocentsValidationSchema = (typeOfRegister, sharedVisit) => {
             "El nombre del docente es obligatorio."
           ),
           saber: Yup.array()
-            .min(4, "Debe completar los saberes con exactamente 4 indicadores.")
+            .min(1, "Debe completar el saber del docente.")
             .required("Debe agregar saberes para el docente."),
           saberHacer: Yup.array()
             .min(
-              4,
+              1,
               "Debe completar los saberes hacer con exactamente 4 indicadores."
             )
             .required("Debe agregar saberes hacer para el docente."),
